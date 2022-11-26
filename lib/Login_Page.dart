@@ -194,7 +194,7 @@ class _HomePage extends State<HomePage> {
   }
 }
 
-bool _cheak_ID(String ID, String PW) {
+bool _cheak_ID(String ID, String PW) { //判斷是漁工還是船長
   if (ID.length > 3)
     return true;
   else

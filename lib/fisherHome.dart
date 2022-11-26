@@ -23,6 +23,11 @@ class _FisherHomeState extends State<FisherHome> {
   // final GlobalKey<StepsState> _key = GlobalKey();
   final PageController controller = PageController(initialPage: 1000);
   List<Namelist> searchList = getList();
+  int _selectedIndex = 0;
+  NavigationRailLabelType labelType = NavigationRailLabelType.all;
+  bool showLeading = false;
+  bool showTrailing = false;
+  double groupAligment = -1.0;
 
   @override
   Widget build(BuildContext context) {
@@ -31,177 +36,48 @@ class _FisherHomeState extends State<FisherHome> {
       decoration: const BoxDecoration(
           //背景圖片
           image: DecorationImage(
-        image: AssetImage('assets/images/background.jpg'),
-        // image: NetworkImage('https://i.imgur.com/Ze7TiVQ.png'),
+        image: AssetImage('assets/images/fisherman.jpg'),
         fit: BoxFit.cover,
       )),
 
       child: Scaffold(
         key: _scaffoldKey,
-        drawer: MyDrawer(
-          state: 0,
-        ),
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          toolbarHeight: 100,
-          leading: IconButton(
-            iconSize: 33.0,
-            icon: const Icon(
-              Icons.menu,
-              color: Color.fromARGB(255, 55, 81, 136),
+        body: Row(
+          children: [
+            NavigationRail(
+              backgroundColor: Color.fromARGB(255, 135, 168, 202),
+              selectedIndex: _selectedIndex,
+              groupAlignment: groupAligment,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              labelType: labelType,
+              destinations: <NavigationRailDestination>[
+                NavigationRailDestination(
+                  icon:
+                      Container(width: 200, child: Icon(Icons.favorite_border)),
+                  selectedIcon:
+                      Container(width: 200, child: Icon(Icons.favorite)),
+                  label: Text('First'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.bookmark_border),
+                  selectedIcon: Icon(Icons.book),
+                  label: Text('Second'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.star_border),
+                  selectedIcon: Icon(Icons.star),
+                  label: Text('Third'),
+                ),
+              ],
             ),
-            // ignore: avoid_print
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          ),
-          title: Row(
-            textBaseline: TextBaseline.alphabetic,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              const Text(' '),
-              GestureDetector(
-                child: Container(
-                  padding: const EdgeInsets.only(
-                    bottom:
-                        2, // This can be the space you need between text and underline
-                  ),
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                    color: Color.fromARGB(255, 135, 168, 202),
-                    width: 2, // This would be the width of the underline
-                  ))),
-                  child: const Text(
-                    '               工記',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 82, 82, 82),
-                      fontSize: 23.0,
-                      // decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ),
-              const Text('             '),
-            ],
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 80.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              TextField(
-                //搜尋欄
-                onChanged: (value) {
-                  setState(() {
-                    filterSearchResults(value);
-                  });
-                },
-                cursorColor: const Color.fromARGB(255, 135, 168, 202),
-                style: const TextStyle(color: Color.fromARGB(255, 30, 43, 51)),
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
-                  ),
-                  labelStyle: const TextStyle(
-                      color: Color.fromARGB(255, 126, 126, 126)),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 255, 255, 255),
-                  focusColor: const Color.fromARGB(255, 255, 255, 255),
-                  hoverColor: Color.fromARGB(255, 230, 230, 230),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: '請輸入名稱/ID',
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 126, 126, 126),
-                  ),
-                  prefixIcon: const Icon(Icons.search),
-                  prefixIconColor: const Color.fromARGB(255, 135, 168, 202),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    ChoiceChipDemo(), //工作與用餐按鈕
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (prev == -1) prev = 1000;
-                                // aTime = aTime.subtract(const Duration(days: 1));
-                                controller.previousPage(
-                                  duration: Duration(milliseconds: 350),
-                                  curve: Curves.easeInOut,
-                                );
-                              });
-                            },
-                            icon: Icon(Icons.chevron_left),
-                            color: Color.fromARGB(255, 82, 82, 82),
-                          ),
-                          CupertinoButton(
-                            child: Text(
-                              '${aTime.year}/${aTime.month}/${aTime.day}',
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 82, 82, 82),
-                                fontSize: 16.0,
-                                // decoration: TextDecoration.underline,
-                              ),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                prev = -1;
-                                controller.animateToPage(
-                                  1000,
-                                  duration: Duration(milliseconds: 380),
-                                  curve: Curves.easeInOut,
-                                );
-                                aTime = currentTime;
-                              });
-                            },
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (prev == -1) prev = 1000;
-                                controller.nextPage(
-                                    duration: Duration(milliseconds: 350),
-                                    curve: Curves.easeIn);
-                                // aTime = aTime.add(const Duration(days: 1));
-                              });
-                            },
-                            icon: Icon(Icons.chevron_right),
-                            color: Color.fromARGB(255, 82, 82, 82),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    FMCupertinoButtonVC(),
-                  ]),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Expanded(
-                // child: Steps(),
-                child: _pagechange(),
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-            ],
-          ),
+            VerticalDivider(thickness: 1, width: 1),
+            Expanded(child: Column()),
+          ],
         ),
       ),
     );
