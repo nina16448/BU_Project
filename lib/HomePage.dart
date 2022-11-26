@@ -10,79 +10,179 @@ import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Globals.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePage();
+}
+
+class _HomePage extends State<HomePage> {
+  bool inputS = false;
+  bool inputW = false;
+  bool hide = true;
+  final fieldText = TextEditingController();
+  final fieldTextW = TextEditingController();
+  void clearText() {
+    fieldText.clear();
+    fieldTextW.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
-
-    var login_text = Text(
-        "登入",
+    var login_text = const Text("登入",
         style: TextStyle(
-          color: Color.fromARGB(255, 56, 144, 189),
-          fontSize: 50,
-          fontWeight: FontWeight.w700,
-        )
-    );
+          color: Color.fromARGB(255, 82, 82, 82),
+          fontSize: 32,
+          // fontWeight: FontWeight.w700,
+        ));
 
-    var textfield = TextField(
-      maxLines: 1,
-      maxLength: 8,
+    var password = TextFormField(
+      obscureText: hide,
+      controller: fieldTextW,
+      textAlign: TextAlign.start,
       cursorColor: const Color.fromARGB(255, 135, 168, 202),
       style: const TextStyle(color: Color.fromARGB(255, 30, 43, 51)),
       decoration: InputDecoration(
-        labelStyle: const TextStyle(
-            color: Color.fromARGB(255, 126, 126, 126)),
-        contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
+        labelStyle: const TextStyle(color: Color.fromARGB(255, 126, 126, 126)),
+        contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
         filled: true,
         fillColor: const Color.fromARGB(255, 255, 255, 255),
+        focusColor: const Color.fromARGB(255, 255, 255, 255),
+        hoverColor: Color.fromARGB(255, 230, 230, 230),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+        hintText: '請輸入密碼',
+        hintStyle: const TextStyle(
+          color: Color.fromARGB(255, 126, 126, 126),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        suffixIcon: IconButton(
+          focusColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          color: const Color.fromARGB(255, 135, 168, 202),
+          onPressed: () {
+            setState(() {
+              hide = !hide;
+            });
+          },
+          icon: hide ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+        ),
+      ),
+      onChanged: (value) {
+        setState(() {
+          print(value);
+          inputW = (value.isEmpty) ? false : true;
+          print(inputW);
+        });
+      },
+    );
+
+    var textfield = TextFormField(
+      controller: fieldText,
+      textAlign: TextAlign.start,
+      cursorColor: const Color.fromARGB(255, 135, 168, 202),
+      style: const TextStyle(color: Color.fromARGB(255, 30, 43, 51)),
+      decoration: InputDecoration(
+        labelStyle: const TextStyle(color: Color.fromARGB(255, 126, 126, 126)),
+        contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+        filled: true,
+        fillColor: const Color.fromARGB(255, 255, 255, 255),
+        focusColor: const Color.fromARGB(255, 255, 255, 255),
+        hoverColor: Color.fromARGB(255, 230, 230, 230),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         hintText: '請輸入名稱/ID',
         hintStyle: const TextStyle(
           color: Color.fromARGB(255, 126, 126, 126),
         ),
-        prefixIcon: const Icon(Icons.search),
-        prefixIconColor: const Color.fromARGB(255, 135, 168, 202),
       ),
+      onChanged: (value) {
+        setState(() {
+          print(value);
+          inputS = (value.isEmpty) ? false : true;
+          print(inputS);
+        });
+      },
     );
 
-    var confirmbutton = ElevatedButton(
-      child: Text('確認'),
-      onPressed: () {
-        Navigator.popAndPushNamed(context, '/Login_Choice');
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 56, 144, 189),
-        textStyle: TextStyle(fontSize: 30.0),
+    var confirmbutton = CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 105, vertical: 10),
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromARGB(255, 135, 168, 202),
+      disabledColor: Color.fromARGB(255, 196, 196, 196),
+      onPressed: (inputS && inputW)
+          ? () {
+              setState(() {
+                clearText();
+                inputS = false;
+                if (idRight) {
+                  Navigator.pushNamed(context, '/Captain_Home');
+                }
+              });
+            }
+          : null,
+      child: const Text(
+        '確認',
+        style: TextStyle(
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 20.0,
+          fontFamily: 'GenJyuu',
+          // decoration: TextDecoration.underline,
+        ),
       ),
     );
 
     return Container(
-      decoration: const BoxDecoration(
-        //背景圖片
-          image: DecorationImage(
-            image: AssetImage('assets/images/background.jpg'),
-            // image: NetworkImage('https://i.imgur.com/Ze7TiVQ.png'),
-            fit: BoxFit.cover,
-          )
-      ),
-
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-              login_text,
-              textfield,
-              confirmbutton,
-            ]
-          ),
-        )
-      )
-    );
+        decoration: const BoxDecoration(
+            //背景圖片
+            image: DecorationImage(
+          image: AssetImage('assets/images/login.jpg'),
+          // image: NetworkImage('https://i.imgur.com/Ze7TiVQ.png'),
+          fit: BoxFit.cover,
+        )),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    login_text,
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: 250,
+                      child: textfield,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: 250,
+                      child: password,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    confirmbutton,
+                    const SizedBox(
+                      height: 60,
+                    ),
+                  ]),
+            )));
   }
 }

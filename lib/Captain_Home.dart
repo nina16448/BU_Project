@@ -104,11 +104,17 @@ class _Captain_HomeState extends State<Captain_Home> {
                 cursorColor: const Color.fromARGB(255, 135, 168, 202),
                 style: const TextStyle(color: Color.fromARGB(255, 30, 43, 51)),
                 decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
                   labelStyle: const TextStyle(
                       color: Color.fromARGB(255, 126, 126, 126)),
                   contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
                   filled: true,
                   fillColor: const Color.fromARGB(255, 255, 255, 255),
+                  focusColor: const Color.fromARGB(255, 255, 255, 255),
+                  hoverColor: Color.fromARGB(255, 230, 230, 230),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide.none,
@@ -232,7 +238,7 @@ class _Captain_HomeState extends State<Captain_Home> {
 
   void filterSearchResults(String query) {
     List<Namelist> dummySearchList = [];
-    dummySearchList.addAll(getList());
+    dummySearchList.addAll(globalList);
     if (query.isNotEmpty) {
       List<Namelist> dummyListData = [];
       dummySearchList.forEach((item) {
@@ -244,12 +250,17 @@ class _Captain_HomeState extends State<Captain_Home> {
         checkState = false;
         searchList.clear();
         searchList.addAll(dummyListData);
+        print(searchList.length);
       });
       return;
     } else {
       setState(() {
         searchList.clear();
-        searchList.addAll(getList());
+        // searchList.addAll(getList());
+        searchList.addAll(globalList);
+        // searchList = globalList;
+        print('global size:');
+        print(globalList.length);
       });
     }
   }

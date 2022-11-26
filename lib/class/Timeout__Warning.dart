@@ -10,7 +10,7 @@ class Notice {
   bool isExpanded;
 }
 
-List<Notice> getList() {
+List<Notice> getListw() {
   return [
     Notice('12/3 超時通知', ['徐濤', '鮑景利']),
     Notice('11/6 超時通知', ['李建偉']),
@@ -29,7 +29,7 @@ class TimeList extends StatefulWidget {
 }
 
 class _TimeList extends State<TimeList> {
-  final List<Notice> _notices = getList();
+  final List<Notice> _notices = getListw();
   @override
   Widget build(BuildContext context) {
     return gaplist();

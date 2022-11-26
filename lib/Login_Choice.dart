@@ -2,7 +2,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'class/Globals.dart';
 import 'class/Choose_Button.dart';
 import 'class/Decision_Button.dart';
 import 'class/drawer.dart';
@@ -15,53 +15,90 @@ class Login_Choice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    var choice_text = Text(
-        "驗證方式",
+    var login_text = const Text("驗證方式",
         style: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w700,
-        )
-    );
-
-    var Passwordbutton = ElevatedButton(
-      child: Text('密碼登錄'),
-      onPressed: () {
-        Navigator.popAndPushNamed(context, '/PasswordLogin');
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 56, 144, 189),
-        textStyle: TextStyle(fontSize: 30.0),
+          color: Color.fromARGB(255, 82, 82, 82),
+          fontSize: 32,
+          // fontWeight: FontWeight.w700,
+        ));
+    var confirmbutton = CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 87, vertical: 10),
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromARGB(255, 135, 168, 202),
+      child: const Text(
+        '密碼登入',
+        style: TextStyle(
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 20.0,
+          fontFamily: 'GenJyuu',
+          // decoration: TextDecoration.underline,
+        ),
       ),
-    );
-
-    var FaceIDbutton = ElevatedButton(
-      child: Text('生物辨識'),
       onPressed: () {
-        Navigator.popAndPushNamed(context, '/FaceIDLogin');
+        Navigator.pushNamed(context, '/PasswordLogin');
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 56, 144, 189),
-        textStyle: TextStyle(fontSize: 30.0),
-      ),
     );
 
-    return Scaffold(
-        body: Center(
-          child: Container(
-            alignment: Alignment.center,
-            // color: Colors.amber,
-            constraints: BoxConstraints(
-                maxWidth: 300, maxHeight: 200, minWidth: 50, minHeight: 50),
-            child: Column(
-                children: [
-                  choice_text,
-                  Passwordbutton,
-                  FaceIDbutton,
-                ]
+    var confirmbutton1 = CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 87, vertical: 10),
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromARGB(255, 135, 168, 202),
+      child: const Text(
+        '生物辨識',
+        style: TextStyle(
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 20.0,
+          fontFamily: 'GenJyuu',
+          // decoration: TextDecoration.underline,
+        ),
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, '/FaceIDLogin');
+      },
+    );
+
+    return Container(
+        decoration: const BoxDecoration(
+            //背景圖片
+            image: DecorationImage(
+          image: AssetImage('assets/images/login.jpg'),
+          // image: NetworkImage('https://i.imgur.com/Ze7TiVQ.png'),
+          fit: BoxFit.cover,
+        )),
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              toolbarHeight: 100,
+              leading: IconButton(
+                iconSize: 33.0,
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Color.fromARGB(255, 55, 81, 136),
+                ),
+                // ignore: avoid_print
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
-          ),
-        )
-    );
+            backgroundColor: Colors.transparent,
+            body: Center(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                const SizedBox(
+                  height: 70,
+                ),
+                login_text,
+                const SizedBox(
+                  height: 20,
+                ),
+                confirmbutton,
+                const SizedBox(
+                  height: 20,
+                ),
+                confirmbutton1,
+              ]),
+            )));
   }
 }

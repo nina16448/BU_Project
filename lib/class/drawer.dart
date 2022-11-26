@@ -5,6 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'Globals.dart';
 import '../time.dart';
 import '../Captain_Home.dart';
+import '../PersonnelManagement.dart';
 
 class MyDrawer extends StatelessWidget {
   MyDrawer({
@@ -85,18 +86,7 @@ class MyDrawer extends StatelessWidget {
                         if (state == 0) {
                           Navigator.pop(context);
                         } else {
-                          Navigator.popAndPushNamed(context, '/');
-                          // Navigator.pop(context);
-                          // Navigator.push<PageTransition>(
-                          //   context,
-                          //   PageTransition(
-                          // duration: Duration(milliseconds: 150),
-                          // type: PageTransitionType.fade,
-                          // child: Captain_Home(),
-                          // inheritTheme: true,
-                          // fullscreenDialog: true,
-                          // ctx: context),
-                          // );
+                          Navigator.popAndPushNamed(context, '/Captain_Home');
                         }
                       },
                     ),
@@ -134,20 +124,45 @@ class MyDrawer extends StatelessWidget {
                         if (state == 1) {
                           Navigator.pop(context);
                         } else {
-                          // Navigator.pop(context);
-                          // Navigator.push<PageTransition>(
-                          //   context,
-                          //   PageTransition(
-                          //       duration: Duration(milliseconds: 150),
-                          //       // reverseDuration: Duration(milliseconds: 100),
-                          //       type: PageTransitionType.fade,
-                          //       child: Captain_Home2(),
-                          //       inheritTheme: true,
-                          //       fullscreenDialog: true,
-                          //       // opaque: true,
-                          //       ctx: context),
-                          // );
                           Navigator.popAndPushNamed(context, '/time');
+                        }
+                      },
+                    ),
+                    ListTile(
+                      selectedColor: const Color.fromARGB(255, 81, 105, 162),
+                      trailing: (state == 2)
+                          ? const Icon(
+                              Icons.last_page,
+                              color: Color.fromARGB(255, 81, 105, 162),
+                            )
+                          : const Icon(
+                              Icons.last_page,
+                              color: Color.fromARGB(0, 255, 255, 255),
+                            ),
+                      selected: (state == 2),
+                      leading: const Icon(
+                        Icons.manage_accounts,
+                      ),
+                      title: (state == 2)
+                          ? const Text(
+                              '人員管理',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 81, 105, 162),
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : const Text(
+                              '人員管理',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 88, 88, 88),
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                      onTap: () {
+                        if (state == 2) {
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.popAndPushNamed(context, '/Management');
                         }
                       },
                     ),
@@ -163,7 +178,7 @@ class MyDrawer extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
-                    // Navigator.popAndPushNamed(context, '/product');
+                    Navigator.popAndPushNamed(context, '/');
                   },
                 ),
               ],

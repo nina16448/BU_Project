@@ -10,63 +10,147 @@ import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Globals.dart';
 
-class PasswordLogin extends StatelessWidget {
+class PasswordLogin extends StatefulWidget {
   const PasswordLogin({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<PasswordLogin> createState() => _PasswordLogin();
+}
 
-    var PasswordLogin_text = Text(
-        "密碼登入",
+class _PasswordLogin extends State<PasswordLogin> {
+  bool inputS = false;
+  bool hide = true;
+  final fieldText = TextEditingController();
+  void clearText() {
+    fieldText.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var login_text = const Text("密碼登入",
         style: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w700,
-        )
-    );
+          color: Color.fromARGB(255, 82, 82, 82),
+          fontSize: 32,
+          // fontWeight: FontWeight.w700,
+        ));
 
     var textfield = TextField(
-      maxLines: 1,
-      maxLength: 8,
-      style: TextStyle(fontSize: 30.0),
-      textAlign: TextAlign.center,
+      obscureText: hide,
+      controller: fieldText,
+      textAlign: TextAlign.start,
+      cursorColor: const Color.fromARGB(255, 135, 168, 202),
+      style: const TextStyle(color: Color.fromARGB(255, 30, 43, 51)),
       decoration: InputDecoration(
+        labelStyle: const TextStyle(color: Color.fromARGB(255, 126, 126, 126)),
+        contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+        filled: true,
+        fillColor: const Color.fromARGB(255, 255, 255, 255),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
         hintText: '請輸入密碼',
-        hintStyle: TextStyle(fontSize: 30.0),
-        contentPadding: EdgeInsets.only(left: 15, top: 12, bottom: 12),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 6, color: Color.fromARGB(255, 111, 183, 183)),
-          borderRadius: BorderRadius.circular(50.0),
+        hintStyle: const TextStyle(
+          color: Color.fromARGB(255, 126, 126, 126),
+        ),
+        suffixIcon: IconButton(
+          focusColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          color: const Color.fromARGB(255, 135, 168, 202),
+          onPressed: () {
+            setState(() {
+              hide = !hide;
+            });
+          },
+          icon: hide ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+        ),
+      ),
+      onChanged: (value) {
+        setState(() {
+          print(value);
+          inputS = (value.isEmpty) ? false : true;
+          print(inputS);
+        });
+      },
+    );
+
+    var confirmbutton = CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 105, vertical: 10),
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromARGB(255, 135, 168, 202),
+      disabledColor: Color.fromARGB(255, 196, 196, 196),
+      onPressed: inputS
+          ? () {
+              setState(() {
+                clearText();
+                inputS = false;
+                if (passRight) {
+                  Navigator.pushNamed(context, '/Captain_Home');
+                }
+              });
+            }
+          : null,
+      child: const Text(
+        '確認',
+        style: TextStyle(
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 20.0,
+          fontFamily: 'GenJyuu',
+          // decoration: TextDecoration.underline,
         ),
       ),
     );
 
-    var confirmbutton = ElevatedButton(
-      child: Text('確認'),
-      onPressed: () {
-        Navigator.popAndPushNamed(context, '/Captain_Home');
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 56, 144, 189),
-        textStyle: TextStyle(fontSize: 30.0),
-      ),
-    );
-
-    return Scaffold(
-        body: Center(
-          child: Container(
-            alignment: Alignment.center,
-            // color: Colors.amber,
-            constraints: BoxConstraints(
-                maxWidth: 300, maxHeight: 200, minWidth: 50, minHeight: 50),
-            child: Column(
-                children: [
-                  PasswordLogin_text,
-                  textfield,
-                  confirmbutton,
-                ]
+    return Container(
+        decoration: const BoxDecoration(
+            //背景圖片
+            image: DecorationImage(
+          image: AssetImage('assets/images/login.jpg'),
+          // image: NetworkImage('https://i.imgur.com/Ze7TiVQ.png'),
+          fit: BoxFit.cover,
+        )),
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              toolbarHeight: 100,
+              leading: IconButton(
+                iconSize: 33.0,
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Color.fromARGB(255, 55, 81, 136),
+                ),
+                // ignore: avoid_print
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
-          ),
-        )
-    );
+            backgroundColor: Colors.transparent,
+            body: Center(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                const SizedBox(
+                  height: 70,
+                ),
+                login_text,
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  child: textfield,
+                  width: 250,
+                  // child: Row(
+                  //   children: [Expanded(child: textfield), eyebutton],
+                  // ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                confirmbutton,
+              ]),
+            )));
   }
 }

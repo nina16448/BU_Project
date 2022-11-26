@@ -1,8 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'HomePage.dart';
+import 'Login_Choice.dart';
+import 'PassowrdLogin.dart';
+import 'FaceIDLogin.dart';
 import 'Captain_Home.dart';
 import 'time.dart';
 import 'class/Choose_Button.dart';
+import 'PersonnelManagement.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,8 +36,13 @@ class MyApp extends StatelessWidget {
                 transitionType: SharedAxisTransitionType.horizontal),
           })), //字體
       routes: {
-        '/': (context) => const Captain_Home(), //首頁
+        '/': (context) => const HomePage(), //首頁
+        '/Login_Choice': (context) => const Login_Choice(),
+        '/PasswordLogin': (context) => const PasswordLogin(),
+        '/FaceIDLogin': (context) => const FaceIDLogin(),
+        '/Captain_Home': (context) => const Captain_Home(),
         '/time': (context) => const Timeout(),
+        '/Management': (context) => const Management(),
       },
     );
   }
