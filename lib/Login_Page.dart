@@ -21,6 +21,9 @@ class _HomePage extends State<HomePage> {
   bool inputS = false;
   bool inputW = false;
   bool hide = true;
+  String ID = '';
+  String PW = '';
+
   final fieldText = TextEditingController();
   final fieldTextW = TextEditingController();
   void clearText() {
@@ -80,6 +83,7 @@ class _HomePage extends State<HomePage> {
         setState(() {
           print(value);
           inputW = (value.isEmpty) ? false : true;
+          PW = value;
           print(inputW);
         });
       },
@@ -114,6 +118,7 @@ class _HomePage extends State<HomePage> {
         setState(() {
           print(value);
           inputS = (value.isEmpty) ? false : true;
+          ID = value;
           print(inputS);
         });
       },
@@ -130,7 +135,9 @@ class _HomePage extends State<HomePage> {
                 clearText();
                 inputS = false;
                 if (idRight) {
-                  Navigator.pushNamed(context, '/Captain_Home');
+                  (_cheak_ID(ID, PW))
+                      ? Navigator.pushNamed(context, '/Captain_Home')
+                      : Navigator.pushNamed(context, '/FisherHome');
                 }
               });
             }
@@ -185,4 +192,11 @@ class _HomePage extends State<HomePage> {
                   ]),
             )));
   }
+}
+
+bool _cheak_ID(String ID, String PW) {
+  if (ID.length > 3)
+    return true;
+  else
+    return false;
 }

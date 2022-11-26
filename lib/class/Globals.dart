@@ -1,5 +1,8 @@
 library my_prj.globals;
 
+dynamic pageButtonState = -1;
+bool confirmCheckState = false;
+
 int ButtonState = -1;
 bool checkState = false;
 

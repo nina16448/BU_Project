@@ -63,7 +63,7 @@ class MyDrawer extends StatelessWidget {
                               color: Color.fromARGB(0, 255, 255, 255),
                             ),
                       selected: (state == 0),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.edit_document,
                       ),
                       title: (state == 0)

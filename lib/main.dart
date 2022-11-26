@@ -1,11 +1,12 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
+import 'Login_Page.dart';
 import 'Login_Choice.dart';
 import 'PassowrdLogin.dart';
 import 'FaceIDLogin.dart';
 import 'Captain_Home.dart';
 import 'time.dart';
+import 'fisherHome.dart';
 import 'class/Choose_Button.dart';
 import 'PersonnelManagement.dart';
 
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/Captain_Home': (context) => const Captain_Home(),
         '/time': (context) => const Timeout(),
         '/Management': (context) => const Management(),
+        '/FisherHome': (context) => const FisherHome(),
       },
     );
   }
