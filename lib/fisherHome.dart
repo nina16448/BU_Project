@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:intl/intl.dart';
 import 'package:vector_math/vector_math_geometry.dart';
 import 'class/Choose_Button.dart';
 import 'class/Decision_Button.dart';
@@ -92,7 +93,41 @@ class _FisherHomeState extends State<FisherHome> {
 
   Widget _timeoutpage() {
     return Column(
-      children: [Text('2')],
+      children: [
+        SizedBox(
+          height: 30,
+        ),
+        Expanded(
+            child: ListView.builder(
+          padding:
+              const EdgeInsets.only(top: 0, right: 10, bottom: 100, left: 10),
+          itemBuilder: (BuildContext context, int index) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: _timeoutcard(index),
+          ),
+          itemCount: 15,
+        ))
+      ],
+    );
+  }
+
+  Widget _timeoutcard(int index) {
+    var nowT = localtimelist[0].stTime.subtract(Duration(days: (index + 100)));
+    return Card(
+      child: ListTile(
+        leading: const Icon(
+          Icons.warning,
+          color: Color.fromARGB(255, 226, 67, 67),
+        ),
+        title: Text(
+          formatDate(
+              nowT, [yyyy, '/', mm, '/', dd, '           連續休息時間少於10小時！']),
+          style: TextStyle(
+            color: Color.fromARGB(255, 82, 82, 82),
+            fontSize: 16.0,
+          ),
+        ),
+      ),
     );
   }
 
@@ -108,7 +143,7 @@ class _FisherHomeState extends State<FisherHome> {
           height: 30,
         ),
         Expanded(
-          child: _worktimelist(0),
+          child: _worktimelist(_timerange!),
         ),
       ],
     );
@@ -116,40 +151,51 @@ class _FisherHomeState extends State<FisherHome> {
 
   Widget _worktimelist(int state) {
     return ListView.builder(
-      // padding: const EdgeInsets.only(top: 0, right: 10, bottom: 50),
+      padding: const EdgeInsets.only(top: 0, right: 10, bottom: 100, left: 10),
       itemBuilder: (BuildContext context, int index) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: _buildTiles(index),
+        child: _buildTiles(index, state),
       ),
-      itemCount: 2,
+      itemCount: (state + 3) * (state + 1),
     );
   }
 
-  Widget _buildTiles(int index) {
-    var nowT = localtimelist[0].stTime.subtract(Duration(days: index));
+  Widget _buildTiles(int index, int state) {
+    var nowT = localtimelist[0]
+        .stTime
+        .subtract(Duration(days: (index + (state + 3) * (state + 1))));
     return ExpansionTile(
-      leading: Checkbox(
-        fillColor: MaterialStateProperty.all(Colors.blueGrey),
-        // color: Color.fromARGB(255, 55, 81, 136),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        checkColor: Colors.white,
-        value: isChecked.contains(index),
-        onChanged: (value) {
-          setState(() {
-            if (value == true)
-              isChecked.add(index);
-            else
-              isChecked.remove(index);
-          });
-        },
-      ),
+      key: PageStorageKey<int>(index + (state + 3) * (state + 1)),
+      initiallyExpanded: (state == 0),
+      // tilePadding: EdgeInsets.fromLTRB(0, 0, 458, 0),
+      leading: (state == 0)
+          ? Checkbox(
+              fillColor: MaterialStateProperty.all(Colors.blueGrey),
+              // color: Color.fromARGB(255, 55, 81, 136),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              checkColor: Colors.white,
+              value: isChecked.contains(index),
+              onChanged: (value) {
+                setState(() {
+                  if (value == true) {
+                    isChecked.add(index);
+                  } else {
+                    isChecked.remove(index);
+                  }
+                });
+              },
+            )
+          : const SizedBox(
+              width: 20,
+            ),
       title: Text(
-        '${nowT.year}/${nowT.month}/${nowT.day}',
+        formatDate(nowT, [yyyy, '/', mm, '/', dd]),
         style: const TextStyle(
           color: Color.fromARGB(255, 55, 81, 136),
-          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          fontSize: 14.0,
         ),
       ),
       children: [
@@ -170,7 +216,7 @@ class _FisherHomeState extends State<FisherHome> {
       return Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            padding: EdgeInsets.fromLTRB(5, 5, 10, 5),
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 229, 236, 243),
               borderRadius: BorderRadius.circular(100),
@@ -204,7 +250,44 @@ class _FisherHomeState extends State<FisherHome> {
               const SizedBox(
                 width: 15,
               ),
-              Text('${_stime.hour}:${_stime.minute}'),
+              Text(
+                formatDate(_stime, [HH, ':', nn]),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 81, 105, 162),
+                ),
+              ),
+              const Text(
+                ' 至 ',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 81, 105, 162),
+                ),
+              ),
+              Text(
+                formatDate(_etime, [HH, ':', nn]),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 81, 105, 162),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Text(
+                '${(_etime.difference(_stime).inMinutes) / 60}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 81, 105, 162),
+                ),
+              ),
+              const Text(
+                '小時',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 81, 105, 162),
+                ),
+              ),
             ]),
           ),
           const SizedBox(
@@ -217,7 +300,7 @@ class _FisherHomeState extends State<FisherHome> {
 
   Widget _timebuttom() {
     return Wrap(
-      spacing: 60,
+      spacing: 50,
       children: [
         const SizedBox(
           width: 0,
@@ -244,36 +327,8 @@ class _FisherHomeState extends State<FisherHome> {
           selected: _timerange == 0,
           onSelected: (value) {
             setState(() {
+              isChecked.clear();
               _timerange = 0;
-            });
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        ChoiceChip(
-          label: (_timerange == 1)
-              ? const Text(
-                  '本月',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 18,
-                  ),
-                )
-              : const Text(
-                  '本月',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 135, 168, 202),
-                    fontSize: 18,
-                  ),
-                ),
-          labelPadding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-          backgroundColor: const Color.fromARGB(255, 224, 232, 248),
-          selectedColor: const Color.fromARGB(255, 81, 105, 162),
-          selected: _timerange == 1,
-          onSelected: (value) {
-            setState(() {
-              _timerange = 1;
             });
           },
           shape: RoundedRectangleBorder(
@@ -283,14 +338,14 @@ class _FisherHomeState extends State<FisherHome> {
         ChoiceChip(
           label: (_timerange == 2)
               ? const Text(
-                  '本週',
+                  '本月',
                   style: TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 18,
                   ),
                 )
               : const Text(
-                  '本週',
+                  '本月',
                   style: TextStyle(
                     color: Color.fromARGB(255, 135, 168, 202),
                     fontSize: 18,
@@ -302,6 +357,7 @@ class _FisherHomeState extends State<FisherHome> {
           selected: _timerange == 2,
           onSelected: (value) {
             setState(() {
+              isChecked.clear();
               _timerange = 2;
             });
           },
@@ -309,7 +365,130 @@ class _FisherHomeState extends State<FisherHome> {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
+        ChoiceChip(
+          label: (_timerange == 1)
+              ? const Text(
+                  '本週',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 18,
+                  ),
+                )
+              : const Text(
+                  '本週',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 135, 168, 202),
+                    fontSize: 18,
+                  ),
+                ),
+          labelPadding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          backgroundColor: const Color.fromARGB(255, 224, 232, 248),
+          selectedColor: const Color.fromARGB(255, 81, 105, 162),
+          selected: _timerange == 1,
+          onSelected: (value) {
+            setState(() {
+              isChecked.clear();
+              _timerange = 1;
+            });
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        _cupertinoButton(),
       ],
+    );
+  }
+
+  CupertinoButton _cupertinoButton() {
+    return CupertinoButton(
+      color: const Color.fromARGB(255, 237, 110, 74),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      disabledColor: Colors.grey,
+      onPressed: (isChecked.isNotEmpty)
+          ? () {
+              setState(() {
+                _showAlertDialog(context);
+              });
+            }
+          : null,
+      borderRadius: BorderRadius.circular(50),
+      child: const Text(
+        '確認工時',
+        style: TextStyle(
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 18.0,
+          fontFamily: 'GenJyuu',
+        ),
+      ),
+    );
+  }
+
+  void _showAlertDialog(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: const Text(
+          '是否確認登記時段',
+          style: TextStyle(
+            fontFamily: 'GenJyuu',
+          ),
+        ),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [
+            SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              '登記完經確認後將無法修改',
+              style: TextStyle(
+                color: Color.fromARGB(255, 32, 42, 61),
+                // fontSize: 14.0,
+                fontFamily: 'GenJyuu',
+              ),
+            ),
+          ],
+        ),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            /// This parameter indicates this action is the default,
+            /// and turns the action's text to bold text.
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              '取消',
+              style: TextStyle(
+                color: Color.fromARGB(255, 69, 101, 160),
+                fontWeight: FontWeight.normal,
+                fontFamily: 'GenJyuu',
+              ),
+            ),
+          ),
+          CupertinoDialogAction(
+            /// This parameter indicates the action would perform
+            /// a destructive action such as deletion, and turns
+            /// the action's text color to red.
+            isDestructiveAction: true,
+            onPressed: () {
+              setState(() {
+                isChecked.clear();
+              });
+
+              Navigator.pop(context);
+            },
+            child: const Text(
+              '確認',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'GenJyuu',
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
