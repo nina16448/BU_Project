@@ -132,6 +132,7 @@ class _HomePage extends State<HomePage> {
       onPressed: (inputS && inputW)
           ? () {
               setState(() {
+                now_login.title = ID;
                 clearText();
                 inputS = false;
                 if (idRight) {
@@ -194,7 +195,8 @@ class _HomePage extends State<HomePage> {
   }
 }
 
-bool _cheak_ID(String ID, String PW) { //判斷是漁工還是船長
+bool _cheak_ID(String ID, String PW) {
+  //判斷是漁工還是船長
   if (ID.length > 3)
     return true;
   else

@@ -1,13 +1,16 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:vector_math/vector_math_geometry.dart';
 import 'class/Choose_Button.dart';
 import 'class/Decision_Button.dart';
 import 'class/drawer.dart';
 import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Globals.dart';
+import 'package:date_format/date_format.dart';
 
 class FisherHome extends StatefulWidget {
   const FisherHome({Key? key}) : super(key: key);
@@ -23,11 +26,16 @@ class _FisherHomeState extends State<FisherHome> {
   // final GlobalKey<StepsState> _key = GlobalKey();
   final PageController controller = PageController(initialPage: 1000);
   List<Namelist> searchList = getList();
-  int _selectedIndex = 0;
   NavigationRailLabelType labelType = NavigationRailLabelType.all;
   bool showLeading = false;
   bool showTrailing = false;
   double groupAligment = -1.0;
+  Namelist now = now_login;
+  int? _timerange = 0;
+  List<Timelist> localtimelist = getunconfirmed();
+
+  int? _value = 0;
+  List<int> isChecked = [];
 
   @override
   Widget build(BuildContext context) {
@@ -45,42 +53,447 @@ class _FisherHomeState extends State<FisherHome> {
         backgroundColor: Colors.transparent,
         body: Row(
           children: [
-            NavigationRail(
-              backgroundColor: Color.fromARGB(255, 135, 168, 202),
-              selectedIndex: _selectedIndex,
-              groupAlignment: groupAligment,
-              onDestinationSelected: (int index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              labelType: labelType,
-              destinations: <NavigationRailDestination>[
-                NavigationRailDestination(
-                  icon:
-                      Container(width: 200, child: Icon(Icons.favorite_border)),
-                  selectedIcon:
-                      Container(width: 200, child: Icon(Icons.favorite)),
-                  label: Text('First'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.bookmark_border),
-                  selectedIcon: Icon(Icons.book),
-                  label: Text('Second'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.star_border),
-                  selectedIcon: Icon(Icons.star),
-                  label: Text('Third'),
-                ),
-              ],
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 135, 168, 202),
+              ),
+              child: Column(
+                children: [
+                  _ledding(),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            _home(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            _timeout(),
+                          ],
+                        ),
+                        _logout(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            VerticalDivider(thickness: 1, width: 1),
-            Expanded(child: Column()),
+            const VerticalDivider(thickness: 1, width: 1),
+            Expanded(
+              child: (_value == 0) ? _mainpage() : _timeoutpage(),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _timeoutpage() {
+    return Column(
+      children: [Text('2')],
+    );
+  }
+
+  Widget _mainpage() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 100,
+        ),
+        _timebuttom(),
+        SizedBox(
+          height: 30,
+        ),
+        Expanded(
+          child: _worktimelist(0),
+        ),
+      ],
+    );
+  }
+
+  Widget _worktimelist(int state) {
+    return ListView.builder(
+      // padding: const EdgeInsets.only(top: 0, right: 10, bottom: 50),
+      itemBuilder: (BuildContext context, int index) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: _buildTiles(index),
+      ),
+      itemCount: 2,
+    );
+  }
+
+  Widget _buildTiles(int index) {
+    var nowT = localtimelist[0].stTime.subtract(Duration(days: index));
+    return ExpansionTile(
+      leading: Checkbox(
+        fillColor: MaterialStateProperty.all(Colors.blueGrey),
+        // color: Color.fromARGB(255, 55, 81, 136),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        checkColor: Colors.white,
+        value: isChecked.contains(index),
+        onChanged: (value) {
+          setState(() {
+            if (value == true)
+              isChecked.add(index);
+            else
+              isChecked.remove(index);
+          });
+        },
+      ),
+      title: Text(
+        '${nowT.year}/${nowT.month}/${nowT.day}',
+        style: const TextStyle(
+          color: Color.fromARGB(255, 55, 81, 136),
+          fontSize: 16.0,
+        ),
+      ),
+      children: [
+        Container(
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+          child: _lis(),
+          // Column(children: [_row()]),
+        )
+      ],
+    );
+  }
+
+  Widget _lis() {
+    return Column(
+        children: List<Widget>.generate(localtimelist.length, (ID) {
+      var _stime = localtimelist[ID].stTime;
+      var _etime = localtimelist[ID].endTime;
+      return Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 229, 236, 243),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Row(children: [
+              (localtimelist[ID].state == 0)
+                  ? const Icon(
+                      color: Color.fromARGB(255, 142, 160, 197),
+                      Icons.local_dining)
+                  : const Icon(
+                      color: Color.fromARGB(255, 44, 84, 121),
+                      FontAwesome5Solid.fish),
+              const SizedBox(
+                width: 15,
+              ),
+              (localtimelist[ID].state == 0)
+                  ? const Text(
+                      '用餐',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 142, 160, 197),
+                      ),
+                    )
+                  : const Text(
+                      '工作',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 44, 84, 121),
+                      ),
+                    ),
+              const SizedBox(
+                width: 15,
+              ),
+              Text('${_stime.hour}:${_stime.minute}'),
+            ]),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+        ],
+      );
+    }));
+  }
+
+  Widget _timebuttom() {
+    return Wrap(
+      spacing: 60,
+      children: [
+        const SizedBox(
+          width: 0,
+        ),
+        ChoiceChip(
+          label: (_timerange == 0)
+              ? const Text(
+                  '未確認',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 18,
+                  ),
+                )
+              : const Text(
+                  '未確認',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 135, 168, 202),
+                    fontSize: 18,
+                  ),
+                ),
+          labelPadding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+          backgroundColor: const Color.fromARGB(255, 224, 232, 248),
+          selectedColor: const Color.fromARGB(255, 81, 105, 162),
+          selected: _timerange == 0,
+          onSelected: (value) {
+            setState(() {
+              _timerange = 0;
+            });
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        ChoiceChip(
+          label: (_timerange == 1)
+              ? const Text(
+                  '本月',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 18,
+                  ),
+                )
+              : const Text(
+                  '本月',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 135, 168, 202),
+                    fontSize: 18,
+                  ),
+                ),
+          labelPadding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          backgroundColor: const Color.fromARGB(255, 224, 232, 248),
+          selectedColor: const Color.fromARGB(255, 81, 105, 162),
+          selected: _timerange == 1,
+          onSelected: (value) {
+            setState(() {
+              _timerange = 1;
+            });
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        ChoiceChip(
+          label: (_timerange == 2)
+              ? const Text(
+                  '本週',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 18,
+                  ),
+                )
+              : const Text(
+                  '本週',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 135, 168, 202),
+                    fontSize: 18,
+                  ),
+                ),
+          labelPadding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          backgroundColor: const Color.fromARGB(255, 224, 232, 248),
+          selectedColor: const Color.fromARGB(255, 81, 105, 162),
+          selected: _timerange == 2,
+          onSelected: (value) {
+            setState(() {
+              _timerange = 2;
+            });
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _logout() {
+    return Container(
+      width: 250,
+      height: 100,
+      padding: const EdgeInsets.only(top: 50, left: 0, right: 15.0),
+      // ignore: sort_child_properties_last
+      child: ListTile(
+        onTap: () {
+          Navigator.popAndPushNamed(context, '/');
+        },
+        leading: const Icon(
+          Icons.logout,
+          size: 30,
+        ),
+        iconColor: const Color.fromARGB(255, 245, 245, 245),
+        title: const Text(
+          '登出系統',
+          style: TextStyle(
+            color: Color.fromARGB(255, 255, 255, 255),
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _home() {
+    return ChoiceChip(
+      pressElevation: 0,
+      side: BorderSide(
+        color: const Color.fromARGB(255, 135, 168, 202),
+      ),
+      padding: EdgeInsets.fromLTRB(5, 10, 125, 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      avatar: (_value == 0)
+          ? const Icon(
+              size: 30,
+              Icons.sensor_occupied,
+              color: Color.fromARGB(255, 81, 105, 162),
+            )
+          : const Icon(
+              size: 30,
+              Icons.person,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+      label: (_value == 0)
+          ? const Text(
+              '個人頁面',
+              style: TextStyle(
+                color: Color.fromARGB(255, 81, 105, 162),
+                fontSize: 16,
+              ),
+            )
+          : const Text(
+              '個人頁面',
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+                fontSize: 16,
+              ),
+            ),
+      selected: _value == 0,
+      labelPadding: const EdgeInsets.fromLTRB(10, 4, 10, 2),
+      backgroundColor: const Color.fromARGB(255, 135, 168, 202),
+      selectedColor: const Color.fromARGB(255, 188, 203, 231),
+      onSelected: (bool selected) {
+        print(selected);
+        setState(() {
+          _value = 0;
+        });
+      },
+    );
+  }
+
+  Widget _timeout() {
+    return ChoiceChip(
+      pressElevation: 0,
+      side: const BorderSide(
+        color: Color.fromARGB(255, 135, 168, 202),
+      ),
+      padding: EdgeInsets.fromLTRB(5, 10, 125, 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      avatar: (_value == 1)
+          ? const Icon(
+              size: 30,
+              Icons.notifications_active,
+              color: Color.fromARGB(255, 81, 105, 162),
+            )
+          : const Icon(
+              size: 30,
+              Icons.notifications,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+      label: (_value == 1)
+          ? const Text(
+              '超時紀錄',
+              style: TextStyle(
+                color: Color.fromARGB(255, 81, 105, 162),
+                fontSize: 16,
+              ),
+            )
+          : const Text(
+              '超時紀錄',
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+                fontSize: 16,
+              ),
+            ),
+      selected: _value == 1,
+      labelPadding: const EdgeInsets.fromLTRB(10, 4, 10, 2),
+      backgroundColor: const Color.fromARGB(255, 135, 168, 202),
+      selectedColor: const Color.fromARGB(255, 188, 203, 231),
+      onSelected: (bool selected) {
+        print(selected);
+        setState(() {
+          _value = 1;
+        });
+      },
+    );
+  }
+
+  Widget _ledding() {
+    return Container(
+        width: 250,
+        height: 170,
+        padding: const EdgeInsets.only(top: 70, left: 5, right: 15.0),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/fish2.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        // ignore: sort_child_properties_last
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              width: 10,
+            ),
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 55, 81, 136),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: const Icon(
+                color: Colors.white,
+                Icons.sentiment_very_satisfied,
+                size: 45,
+                fill: 1,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  now.title,
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w700,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                ),
+                Text(
+                  '#${now.title}',
+                  style: const TextStyle(
+                      fontSize: 14.0,
+                      color: Color.fromARGB(255, 226, 242, 255)),
+                ),
+              ],
+            )
+          ],
+        ));
   }
 
   Widget _pagechange() {

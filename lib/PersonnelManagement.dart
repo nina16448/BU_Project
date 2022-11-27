@@ -119,7 +119,7 @@ class _Management extends State<Management> {
                 child: Center(
                   child: Icon(
                     size: 40,
-                    Icons.add,
+                    Icons.person_add_alt_1,
                     color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
