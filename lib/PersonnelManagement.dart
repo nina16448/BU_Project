@@ -10,6 +10,7 @@ import 'class/drawer.dart';
 import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Settinglist.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 // ignore: camel_case_types
 class Management extends StatefulWidget {
@@ -37,95 +38,197 @@ class _Management extends State<Management> {
       )),
 
       child: Scaffold(
-        key: _scaffoldKey,
-        drawer: MyDrawer(
-          state: 2,
-        ),
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          toolbarHeight: 100,
-          leading: IconButton(
-            iconSize: 33.0,
-            icon: const Icon(
-              Icons.menu,
-              color: Color.fromARGB(255, 55, 81, 136),
-            ),
-            // ignore: avoid_print
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          key: _scaffoldKey,
+          drawer: MyDrawer(
+            state: 2,
           ),
-          title: Row(
-            textBaseline: TextBaseline.alphabetic,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              const Text(' '),
-              GestureDetector(
-                child: Container(
-                  padding: const EdgeInsets.only(
-                    bottom:
-                        2, // This can be the space you need between text and underline
-                  ),
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                    color: Color.fromARGB(255, 135, 168, 202),
-                    width: 2, // This would be the width of the underline
-                  ))),
-                  child: const Text(
-                    '               人員管理',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 82, 82, 82),
-                      fontSize: 23.0,
-                      // decoration: TextDecoration.underline,
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            toolbarHeight: 100,
+            leading: IconButton(
+              iconSize: 33.0,
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromARGB(255, 55, 81, 136),
+              ),
+              // ignore: avoid_print
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+            ),
+            title: Row(
+              textBaseline: TextBaseline.alphabetic,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                const Text(' '),
+                GestureDetector(
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      bottom:
+                          2, // This can be the space you need between text and underline
+                    ),
+                    decoration: const BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                      color: Color.fromARGB(255, 135, 168, 202),
+                      width: 2, // This would be the width of the underline
+                    ))),
+                    child: const Text(
+                      '               人員管理',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 82, 82, 82),
+                        fontSize: 23.0,
+                        // decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const Text('             '),
-            ],
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 80.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const SizedBox(
-                height: 20.0,
-              ),
-              // TimeList(),
-
-              Expanded(child: ManList()),
-            ],
-          ),
-        ),
-        floatingActionButton: OpenContainer(
-            //點開會打開的搜尋欄
-            openBuilder: (_, closeContainer) => //點開後長怎樣，連接到list.dart
-                EditPage(Namelist(' '), false, closeContainer),
-            onClosed: (res) => setState(() {}),
-            // tappable: false,
-            closedColor: const Color.fromARGB(255, 237, 110, 74),
-            closedElevation: 6,
-            closedShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(500),
+                const Text('             '),
+              ],
             ),
-            closedBuilder: (_, openContainer) {
-              return const SizedBox(
-                height: 70,
-                width: 70,
-                child: Center(
-                  child: Icon(
-                    size: 40,
-                    Icons.person_add_alt_1,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 80.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const SizedBox(
+                  height: 20.0,
                 ),
-              );
-            }),
-      ),
+                // TimeList(),
+
+                Expanded(child: ManList()),
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            elevation: 6,
+            backgroundColor: const Color.fromARGB(255, 237, 110, 74),
+            child: Icon(
+              size: 35,
+              Icons.person_add_alt_1,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+            onPressed: () {
+              showDataAlert(0, Namelist(''));
+            },
+          )),
     );
+  }
+
+  showDataAlert(int state, Namelist root) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  20.0,
+                ),
+              ),
+            ),
+            contentPadding: const EdgeInsets.only(
+              top: 10.0,
+            ),
+            title: Text(
+              (state == 0) ? "新增資料" : "修改資料",
+              style: TextStyle(fontSize: 24.0),
+            ),
+            content: Container(
+              height: 400,
+              width: 500,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      child: Text(
+                        "姓名",
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '請輸入姓名';
+                          }
+                          return null;
+                        },
+                        initialValue: root.title,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          // hintText: 'Enter Id here',
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      child: Text(
+                        "ID",
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        readOnly: true,
+                        initialValue: '002',
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          // hintText: 'Enter Id here',
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      child: Text(
+                        "工作場所",
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 30),
+                      child: TextFormField(
+                        initialValue: '工作場所',
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          // hintText: 'Enter Id here',
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 60,
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 135, 168, 202),
+                          // fixedSize: Size(250, 50),
+                        ),
+                        child: const Text(
+                          "確認",
+                          style: TextStyle(
+                            fontFamily: 'GenJyuu',
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            fontSize: 16.0,
+                            // decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

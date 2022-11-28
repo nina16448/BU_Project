@@ -7,6 +7,13 @@ import 'EditPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+
+final List<String> items = [
+  '甲板',
+  '廚房',
+];
+String? selectedValue;
 
 class ManList extends StatefulWidget {
   ManList({super.key});
@@ -63,26 +70,25 @@ class ManListState extends State<ManList> {
                 ],
               ),
 
-              child: OpenContainer(
-                //點開會打開的搜尋欄
-                openBuilder: (_, closeContainer) => //點開後長怎樣，連接到list.dart
-                    EditPage(root, true, closeContainer),
-                onClosed: (res) => setState(() {}),
-                // tappable: false,
-                closedBuilder: (_, openContainer) => ListTile(
-                  leading: const Icon(
-                    Icons.anchor,
-                    color: Color.fromARGB(255, 142, 160, 197),
-                  ),
-                  title: Text(
-                    root.title,
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 82, 82, 82),
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  subtitle: Text('工作場所'),
+              child: ListTile(
+                leading: const Icon(
+                  Icons.anchor,
+                  color: Color.fromARGB(255, 142, 160, 197),
                 ),
+                title: Text(
+                  root.title,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 82, 82, 82),
+                    fontSize: 20.0,
+                  ),
+                ),
+                subtitle: Text('工作場所'),
+                onTap: () {
+                  setState(() {
+                    showDataAlert(1, root);
+                    print(root.title);
+                  });
+                },
               ),
             ),
           ),
@@ -92,5 +98,120 @@ class ManListState extends State<ManList> {
         ),
       ],
     );
+  }
+
+  showDataAlert(int state, Namelist root) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  20.0,
+                ),
+              ),
+            ),
+            contentPadding: const EdgeInsets.only(
+              top: 10.0,
+            ),
+            title: Text(
+              (state == 0) ? "新增資料" : "修改資料",
+              style: TextStyle(fontSize: 24.0),
+            ),
+            content: Container(
+              height: 400,
+              width: 500,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      child: Text(
+                        "姓名",
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '請輸入姓名';
+                          }
+                          return null;
+                        },
+                        initialValue: root.title,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          // hintText: 'Enter Id here',
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      child: Text(
+                        "ID",
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        readOnly: true,
+                        initialValue: '002',
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          // hintText: 'Enter Id here',
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      child: Text(
+                        "工作場所",
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 30),
+                      child: TextFormField(
+                        initialValue: '工作場所',
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          // hintText: 'Enter Id here',
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 60,
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 135, 168, 202),
+                          // fixedSize: Size(250, 50),
+                        ),
+                        child: const Text(
+                          "確認",
+                          style: TextStyle(
+                            fontFamily: 'GenJyuu',
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            fontSize: 16.0,
+                            // decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

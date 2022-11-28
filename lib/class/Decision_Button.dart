@@ -74,7 +74,7 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
           ),
           backgroundColor: Color.fromARGB(255, 237, 110, 74),
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(50),
+          margin: EdgeInsets.all(30),
           shape: StadiumBorder(),
           duration: Duration(milliseconds: 800),
           elevation: 30,
