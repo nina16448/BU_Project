@@ -216,7 +216,7 @@ class _FisherHomeState extends State<FisherHome> {
       return Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(5, 5, 10, 5),
+            padding: EdgeInsets.fromLTRB(15, 5, 10, 5),
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 229, 236, 243),
               borderRadius: BorderRadius.circular(100),
@@ -274,20 +274,28 @@ class _FisherHomeState extends State<FisherHome> {
               const SizedBox(
                 width: 15,
               ),
-              Text(
-                '${(_etime.difference(_stime).inMinutes) / 60}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 81, 105, 162),
-                ),
-              ),
-              const Text(
-                '小時',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 81, 105, 162),
-                ),
-              ),
+              (localtimelist[ID].state == 1)
+                  ? Text(
+                      '${(_etime.difference(_stime).inMinutes) / 60}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 81, 105, 162),
+                      ),
+                    )
+                  : const SizedBox(
+                      width: 15,
+                    ),
+              (localtimelist[ID].state == 1)
+                  ? const Text(
+                      '小時',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 81, 105, 162),
+                      ),
+                    )
+                  : const SizedBox(
+                      width: 15,
+                    ),
             ]),
           ),
           const SizedBox(

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'Globals.dart';
 
@@ -49,8 +50,53 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       disabledColor: Colors.grey,
       onPressed: () {
+        final snackBar = SnackBar(
+          content: Row(
+            children: const [
+              Icon(
+                Icons.warning,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                '未選擇任何登記時段',
+                style: TextStyle(
+                  fontFamily: 'GenJyuu',
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 16.0,
+                  // decoration: TextDecoration.underline,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Color.fromARGB(255, 237, 110, 74),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(50),
+          shape: StadiumBorder(),
+          duration: Duration(milliseconds: 800),
+          elevation: 30,
+        );
+        // final snackBar = SnackBar(
+        //   backgroundColor: Colors.black.withOpacity(0.7),
+        //   duration: Duration(milliseconds: 500),
+        //   content: const Text(
+        //     '未登記時段',
+        //     style: TextStyle(
+        //       fontFamily: 'GenJyuu',
+        //       fontWeight: FontWeight.bold,
+        //       color: Color.fromARGB(255, 255, 255, 255),
+        //       fontSize: 16.0,
+        //       // decoration: TextDecoration.underline,
+        //     ),
+        //   ),
+        // );
         setState(() {
-          checkState ? _showAlertDialog(context) : print('state: $checkState');
+          checkState
+              ? _showAlertDialog(context)
+              : ScaffoldMessenger.of(context).showSnackBar(snackBar);
         });
       },
       borderRadius: BorderRadius.circular(50),

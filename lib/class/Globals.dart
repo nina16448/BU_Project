@@ -82,3 +82,16 @@ List<Namelist> globalList = [
 Namelist turnString(String s) {
   return Namelist(s);
 }
+
+class fisherdata {
+  fisherdata(
+    this.name,
+    this.iD,
+    this.pW,
+    this.workspace,
+  );
+  String name;
+  String iD;
+  String pW;
+  String workspace;
+}

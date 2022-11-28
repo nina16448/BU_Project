@@ -47,125 +47,79 @@ class EditPage extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.anchor,
-                        color: Color.fromARGB(255, 142, 160, 197),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      const Text(
-                        '姓名',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 82, 82, 82),
-                          fontSize: 18.0,
-                          // decoration: TextDecoration.underline,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 250,
-                        child: TextFormField(
-                          initialValue: name.title,
-                          textAlign: TextAlign.start,
-                          cursorColor: const Color.fromARGB(255, 135, 168, 202),
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 82, 82, 82),
-                            fontSize: 18.0,
-                          ),
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(25.7),
-                            ),
-                            labelStyle: const TextStyle(
-                                color: Color.fromARGB(255, 126, 126, 126)),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 2, horizontal: 10),
-                            filled: true,
-                            fillColor: const Color.fromARGB(255, 245, 245, 245),
-                            focusColor:
-                                const Color.fromARGB(255, 255, 255, 255),
-                            hoverColor: Color.fromARGB(255, 230, 230, 230),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          onChanged: (value) {},
-                        ),
-                      ),
-                    ],
-                  ),
+                  _item('姓名', name.title, false),
                   const SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.anchor,
-                        color: Color.fromARGB(255, 142, 160, 197),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      const Text(
-                        '姓名',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 82, 82, 82),
-                          fontSize: 18.0,
-                          // decoration: TextDecoration.underline,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 250,
-                        child: TextFormField(
-                          initialValue: name.title,
-                          textAlign: TextAlign.start,
-                          cursorColor: const Color.fromARGB(255, 135, 168, 202),
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 82, 82, 82),
-                            fontSize: 18.0,
-                          ),
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(25.7),
-                            ),
-                            labelStyle: const TextStyle(
-                                color: Color.fromARGB(255, 126, 126, 126)),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 2, horizontal: 10),
-                            filled: true,
-                            fillColor: const Color.fromARGB(255, 245, 245, 245),
-                            focusColor:
-                                const Color.fromARGB(255, 255, 255, 255),
-                            hoverColor: Color.fromARGB(255, 230, 230, 230),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          onChanged: (value) {},
-                        ),
-                      ),
-                    ],
-                  )
+                  _item('編號', '02', true),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _item('工作場所', '甲板', false),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _item(String ttle, String value, bool modi) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.anchor,
+          color: Color.fromARGB(255, 142, 160, 197),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Text(
+          ttle,
+          style: const TextStyle(
+            color: Color.fromARGB(255, 82, 82, 82),
+            fontSize: 18.0,
+            // decoration: TextDecoration.underline,
+          ),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Container(
+          width: 250,
+          child: TextFormField(
+            readOnly: modi,
+            initialValue: value,
+            textAlign: TextAlign.start,
+            cursorColor: const Color.fromARGB(255, 135, 168, 202),
+            style: const TextStyle(
+              color: Color.fromARGB(255, 82, 82, 82),
+              fontSize: 18.0,
+            ),
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(25.7),
+              ),
+              labelStyle:
+                  const TextStyle(color: Color.fromARGB(255, 126, 126, 126)),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+              filled: true,
+              fillColor: const Color.fromARGB(255, 245, 245, 245),
+              focusColor: const Color.fromARGB(255, 255, 255, 255),
+              hoverColor: Color.fromARGB(255, 230, 230, 230),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+            ),
+            onChanged: (value) {},
+          ),
+        ),
+      ],
     );
   }
 }
