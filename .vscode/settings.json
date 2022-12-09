@@ -1,6 +1,5 @@
 {
-    "cmake.mingwSearchDirs": [
-        "C:\\mingw-w64\\mingw64\\bin"
-    ],
-    "cmake.generator": "MinGW Makefiles"
+  "cmake.mingwSearchDirs": ["C:\\mingw-w64\\mingw64\\bin"],
+  "cmake.generator": "MinGW Makefiles",
+  "cmake.sourceDirectory": "${workspaceFolder}/windows/flutter"
 }
