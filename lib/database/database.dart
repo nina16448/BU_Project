@@ -115,15 +115,15 @@ class CrewDB {
   }
 
   //取得船員資料，若參數為All，則回傳所有船員資料
-  static Future<List<Member>> getMember(
-      String id = 'All', String name = 'none', Future<Database> DB) async {
+  static Future<List<Member>> getMember(Future<Database> DB,
+      [String id = 'All', String name = 'none']) async {
     final db = await DB;
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps;
 
     // if (name != 'none') {
     //   maps = await db.rawQuery('SELECT * FROM Member where Name = ?', [name]);
-    // } else 
+    // } else
     if (id == 'All') {
       maps = await db.query('Member');
     } else {

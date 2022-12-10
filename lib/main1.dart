@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'database/database.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //取得database位置
@@ -33,16 +34,115 @@ void main() async {
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
   String now = dateFormat.format(DateTime.now());
   //建立兩筆工作時程表
-  final sheet1 = Uint8List.fromList([1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5]);
-  var Lo_Sheet = WorkSheet (
+  final sheet1 = Uint8List.fromList([
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ]);
+  var Lo_Sheet = WorkSheet(
     SheetId: 1,
     MemberId: '1',
     Date: now,
     Sheet: sheet1,
   );
-  String yesterday = dateFormat.format(DateTime.now().subtract(Duration(days:1)));
-  final sheet2 = Uint8List.fromList([5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1]);
-  var Lo_Sheet2 = WorkSheet (
+  String yesterday =
+      dateFormat.format(DateTime.now().subtract(Duration(days: 1)));
+  final sheet2 = Uint8List.fromList([
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ]);
+  var Lo_Sheet2 = WorkSheet(
     SheetId: 2,
     MemberId: '1',
     Date: yesterday,
@@ -57,14 +157,14 @@ void main() async {
   await SheetDB.AddWorkTime(Lo_Sheet2, Sheetdb);
 
   //取得所有船員資料
-  List<Member> member = await CrewDB.getMember('All', Crewdb);
+  List<Member> member = await CrewDB.getMember(Crewdb, 'All');
   //取得船員ID為1日期為昨天的工時表
   List<WorkSheet> sheet3 = await SheetDB.getsheet('1', yesterday, Sheetdb);
   debugPrint(member.toString());
   debugPrint(sheet3.toString());
   //刪除ID為1號的船員資料
   await CrewDB.deleteMember('1', Crewdb);
-  member = await CrewDB.getMember('All', Crewdb);
+  member = await CrewDB.getMember(Crewdb, 'All');
   debugPrint(member.toString());
   Lee = const Member(
     Id: '0',
@@ -75,7 +175,7 @@ void main() async {
   );
   //更新船員0號的資料
   await CrewDB.updateMember(Lee, Crewdb);
-  member = await CrewDB.getMember('0', Crewdb);
+  member = await CrewDB.getMember(Crewdb, '0');
   debugPrint(member.toString());
   //runApp(const MyApp());
 }

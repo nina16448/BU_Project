@@ -39,8 +39,6 @@ class MyApp extends StatelessWidget {
           })), //字體
       routes: {
         '/': (context) => const HomePage(), //首頁
-        '/Login_Choice': (context) => const Login_Choice(),
-        '/PasswordLogin': (context) => const PasswordLogin(),
         '/FaceIDLogin': (context) => const FaceIDLogin(),
         '/Captain_Home': (context) => const Captain_Home(),
         '/time': (context) => const Timeout(),

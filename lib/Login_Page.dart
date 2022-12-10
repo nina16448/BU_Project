@@ -10,6 +10,9 @@ import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Globals.dart';
 import 'database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -42,6 +45,7 @@ class _HomePage extends State<HomePage> {
         ));
 
     var password = TextFormField(
+      textInputAction: TextInputAction.done,
       obscureText: hide,
       controller: fieldTextW,
       textAlign: TextAlign.start,
@@ -136,10 +140,16 @@ class _HomePage extends State<HomePage> {
                 now_login.title = ID;
                 clearText();
                 inputS = false;
-                if (idRight) {
-                  (_cheak_ID(ID, PW))
-                      ? Navigator.pushNamed(context, '/Captain_Home')
-                      : Navigator.pushNamed(context, '/FisherHome');
+                switch (_cheak_ID(ID, PW)) {
+                  case 0:
+                    //show error
+                    break;
+                  case 1:
+                    Navigator.pushNamed(context, '/Captain_Home');
+                    break;
+                  case 2:
+                    Navigator.pushNamed(context, '/FisherHome');
+                    break;
                 }
               });
             }
@@ -155,6 +165,24 @@ class _HomePage extends State<HomePage> {
       ),
     );
 
+    var faceButton = CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 10),
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromARGB(255, 135, 168, 202),
+      child: const Text(
+        '生物辨識登入',
+        style: TextStyle(
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 20.0,
+          fontFamily: 'GenJyuu',
+          // decoration: TextDecoration.underline,
+        ),
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, '/FaceIDLogin');
+      },
+    );
+
     return Container(
         decoration: const BoxDecoration(
             //背景圖片
@@ -164,6 +192,22 @@ class _HomePage extends State<HomePage> {
           fit: BoxFit.cover,
         )),
         child: Scaffold(
+            // appBar: AppBar(
+            //   backgroundColor: Colors.transparent,
+            //   elevation: 0.0,
+            //   toolbarHeight: 100,
+            //   leading: IconButton(
+            //     iconSize: 33.0,
+            //     icon: const Icon(
+            //       Icons.arrow_back,
+            //       color: Color.fromARGB(255, 55, 81, 136),
+            //     ),
+            //     // ignore: avoid_print
+            //     onPressed: () {
+            //       Navigator.pop(context);
+            //     },
+            //   ),
+            // ),
             backgroundColor: Colors.transparent,
             body: Center(
               child: Column(
@@ -189,17 +233,28 @@ class _HomePage extends State<HomePage> {
                     ),
                     confirmbutton,
                     const SizedBox(
-                      height: 60,
+                      height: 20,
                     ),
+                    faceButton,
                   ]),
             )));
   }
 }
 
-bool _cheak_ID(String ID, String PW) {
+int _cheak_ID(String ID, String PW) {
+  List<Member> member = [];
   //判斷是漁工還是船長
-  if (ID.length > 3)
-    return true;
-  else
-    return false;
+  if (ID.compareTo('DevMode') == 0 && PW.compareTo('zxcv0206') == 0) {
+    return 1;
+  }
+
+  void getData() async {
+    Future<Database> Crewdb = CrewDB.getDB();
+
+    member = await CrewDB.getMember(Crewdb, ID);
+  }
+
+  if (member.isEmpty) return 0;
+
+  return 2;
 }

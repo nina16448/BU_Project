@@ -26,7 +26,7 @@ class Login_Choice extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       color: const Color.fromARGB(255, 135, 168, 202),
       child: const Text(
-        '密碼登入',
+        '帳號登入',
         style: TextStyle(
           color: Color.fromARGB(255, 255, 255, 255),
           fontSize: 20.0,
@@ -35,7 +35,7 @@ class Login_Choice extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        Navigator.pushNamed(context, '/PasswordLogin');
+        Navigator.pushNamed(context, '/login');
       },
     );
 
@@ -70,17 +70,17 @@ class Login_Choice extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               toolbarHeight: 100,
-              leading: IconButton(
-                iconSize: 33.0,
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Color.fromARGB(255, 55, 81, 136),
-                ),
-                // ignore: avoid_print
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
+              // leading: IconButton(
+              //   iconSize: 33.0,
+              //   icon: const Icon(
+              //     Icons.arrow_back,
+              //     color: Color.fromARGB(255, 55, 81, 136),
+              //   ),
+              //   // ignore: avoid_print
+              //   onPressed: () {
+              //     // Navigator.pop(context);
+              //   },
+              // ),
             ),
             backgroundColor: Colors.transparent,
             body: Center(
@@ -95,9 +95,12 @@ class Login_Choice extends StatelessWidget {
                 ),
                 confirmbutton,
                 const SizedBox(
-                  height: 20,
+                  height: 30,
                 ),
                 confirmbutton1,
+                const SizedBox(
+                  height: 70,
+                ),
               ]),
             )));
   }
