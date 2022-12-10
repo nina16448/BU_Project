@@ -1,5 +1,10 @@
 library my_prj.globals;
 
+import '../database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
+
 dynamic pageButtonState = -1;
 bool confirmCheckState = false;
 
@@ -55,33 +60,34 @@ class Namelist {
   bool isExpanded;
 }
 
-List<Namelist> getList() {
-  return [
-    Namelist('徐濤'),
-    Namelist('趙福忠'),
-    Namelist('李建偉'),
-    Namelist('任海超'),
-    Namelist('鮑景利'),
-    Namelist('MAS MUKTIADI'),
-    Namelist('ARIKURNIA WAN'),
-    Namelist('ERIAWAN'),
-  ];
-}
+// List<Namelist> getList() {
+//   return [
+//     Namelist('徐濤'),
+//     Namelist('趙福忠'),
+//     Namelist('李建偉'),
+//     Namelist('任海超'),
+//     Namelist('鮑景利'),
+//     Namelist('MAS MUKTIADI'),
+//     Namelist('ARIKURNIA WAN'),
+//     Namelist('ERIAWAN'),
+//   ];
+// }
 
-List<Namelist> globalList = [
-  Namelist('徐濤'),
-  Namelist('趙福忠'),
-  Namelist('李建偉'),
-  Namelist('任海超'),
-  Namelist('鮑景利'),
-  Namelist('MAS MUKTIADI'),
-  Namelist('ARIKURNIA WAN'),
-  Namelist('ERIAWAN'),
-];
+// List<Namelist> globalList = [
+//   Namelist('徐濤'),
+//   Namelist('趙福忠'),
+//   Namelist('李建偉'),
+//   Namelist('任海超'),
+//   Namelist('鮑景利'),
+//   Namelist('MAS MUKTIADI'),
+//   Namelist('ARIKURNIA WAN'),
+//   Namelist('ERIAWAN'),
+// ];
 
-Namelist turnString(String s) {
-  return Namelist(s);
-}
+// Namelist turnString(String s) {
+//   return Namelist(s);
+// }
+Future<Database> Crewdb = CrewDB.getDB();
 
 class fisherdata {
   fisherdata(

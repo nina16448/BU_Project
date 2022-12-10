@@ -13,6 +13,7 @@ import 'database/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
+import 'package:animated_button/animated_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -166,14 +167,15 @@ class _HomePage extends State<HomePage> {
     );
 
     var faceButton = CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 10),
-      borderRadius: BorderRadius.circular(10),
-      color: const Color.fromARGB(255, 135, 168, 202),
+      padding: const EdgeInsets.fromLTRB(140, 10, 0, 10),
+      // borderRadius: BorderRadius.circular(10),
+      // color: const Color.fromARGB(255, 135, 168, 202),
       child: const Text(
-        '生物辨識登入',
+        textAlign: TextAlign.right,
+        '生物辨識登入 >',
         style: TextStyle(
-          color: Color.fromARGB(255, 255, 255, 255),
-          fontSize: 20.0,
+          color: Color.fromARGB(255, 44, 61, 92),
+          fontSize: 16.0,
           fontFamily: 'GenJyuu',
           // decoration: TextDecoration.underline,
         ),
@@ -232,9 +234,9 @@ class _HomePage extends State<HomePage> {
                       height: 20,
                     ),
                     confirmbutton,
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
                     faceButton,
                   ]),
             )));
@@ -249,7 +251,6 @@ int _cheak_ID(String ID, String PW) {
   }
 
   void getData() async {
-    Future<Database> Crewdb = CrewDB.getDB();
 
     member = await CrewDB.getMember(Crewdb, ID);
   }

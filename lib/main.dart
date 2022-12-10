@@ -9,9 +9,15 @@ import 'time.dart';
 import 'fisherHome.dart';
 import 'class/Choose_Button.dart';
 import 'PersonnelManagement.dart';
-import 'database/database.dart';
+import '../database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
+import 'dart:async';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Future<Database> Crewdb = CrewDB.getDB();
   runApp(MyApp());
 }
 

@@ -12,6 +12,10 @@ import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Globals.dart';
 import 'package:date_format/date_format.dart';
+import 'database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
 class FisherHome extends StatefulWidget {
   const FisherHome({Key? key}) : super(key: key);
@@ -26,7 +30,12 @@ class _FisherHomeState extends State<FisherHome> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   // final GlobalKey<StepsState> _key = GlobalKey();
   final PageController controller = PageController(initialPage: 1000);
-  List<Namelist> searchList = getList();
+  List<Member> searchList = [];
+
+  void getData() async {
+    searchList = await CrewDB.getMember(Crewdb);
+  }
+
   NavigationRailLabelType labelType = NavigationRailLabelType.all;
   bool showLeading = false;
   bool showTrailing = false;
@@ -708,34 +717,5 @@ class _FisherHomeState extends State<FisherHome> {
         });
       },
     );
-  }
-
-  void filterSearchResults(String query) {
-    List<Namelist> dummySearchList = [];
-    dummySearchList.addAll(globalList);
-    if (query.isNotEmpty) {
-      List<Namelist> dummyListData = [];
-      dummySearchList.forEach((item) {
-        if (item.title.contains(query.toUpperCase())) {
-          dummyListData.add(item);
-        }
-      });
-      setState(() {
-        checkState = false;
-        searchList.clear();
-        searchList.addAll(dummyListData);
-        print(searchList.length);
-      });
-      return;
-    } else {
-      setState(() {
-        searchList.clear();
-        // searchList.addAll(getList());
-        searchList.addAll(globalList);
-        // searchList = globalList;
-        print('global size:');
-        print(globalList.length);
-      });
-    }
   }
 }

@@ -10,21 +10,21 @@ void main() async {
   Future<Database> Crewdb = CrewDB.getDB();
   Future<Database> Sheetdb = SheetDB.getDB();
   //建立三名員工資料
-  var Lee = const Member(
+  var Lee =  Member(
     Id: '0',
     Name: 'Miles',
     Passwd: '1234567',
     Position: 'Captain',
     Wplace: 'Office',
   );
-  var Lo = const Member(
+  var Lo =  Member(
     Id: '1',
     Name: '政傑',
     Passwd: '2345678',
     Position: 'fisherman',
     Wplace: 'dock',
   );
-  var Zhang = const Member(
+  var Zhang =  Member(
     Id: '2',
     Name: '創桓',
     Passwd: '3456789',
@@ -166,7 +166,7 @@ void main() async {
   await CrewDB.deleteMember('1', Crewdb);
   member = await CrewDB.getMember(Crewdb, 'All');
   debugPrint(member.toString());
-  Lee = const Member(
+  Lee = Member(
     Id: '0',
     Name: '俊佑',
     Passwd: '1234567',

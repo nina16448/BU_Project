@@ -11,6 +11,10 @@ import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Settinglist.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
 // ignore: camel_case_types
 class Management extends StatefulWidget {
@@ -111,13 +115,23 @@ class _Management extends State<Management> {
               color: Color.fromARGB(255, 255, 255, 255),
             ),
             onPressed: () {
-              showDataAlert(0, Namelist(''));
+              showDataAlert(
+                  0,
+                  Member(
+                    Id: '',
+                    Name: '',
+                    Passwd: '1234',
+                    Position: 'fisherman',
+                    Wplace: '',
+                  ));
             },
           )),
     );
   }
 
-  showDataAlert(int state, Namelist root) {
+  showDataAlert(int state, Member root) {
+    Member edit = root;
+
     showDialog(
         context: context,
         builder: (context) {
@@ -155,13 +169,16 @@ class _Management extends State<Management> {
                     Container(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        onChanged: (name) {
+                          edit.Name = name;
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return '請輸入姓名';
                           }
                           return null;
                         },
-                        initialValue: root.title,
+                        initialValue: root.Name,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           // hintText: 'Enter Id here',
@@ -177,8 +194,10 @@ class _Management extends State<Management> {
                     Container(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        readOnly: true,
-                        initialValue: '002',
+                        onChanged: (value) {
+                          edit.Id = value;
+                        },
+                        initialValue: root.Id,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           // hintText: 'Enter Id here',
@@ -194,7 +213,10 @@ class _Management extends State<Management> {
                     Container(
                       padding: const EdgeInsets.fromLTRB(8, 8, 8, 30),
                       child: TextFormField(
-                        initialValue: '工作場所',
+                        onChanged: (value) {
+                          edit.Wplace = value;
+                        },
+                        initialValue: root.Wplace,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           // hintText: 'Enter Id here',
@@ -206,7 +228,11 @@ class _Management extends State<Management> {
                       height: 60,
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          // setState(() async {
+                          await CrewDB.AddMember(edit, Crewdb);
+                          // Crewdb = CrewDB.getDB();
+                          // });
                           Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(

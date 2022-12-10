@@ -8,11 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import '../database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
-final List<String> items = [
-  '甲板',
-  '廚房',
-];
 String? selectedValue;
 
 class ManList extends StatefulWidget {
@@ -23,19 +23,24 @@ class ManList extends StatefulWidget {
 }
 
 class ManListState extends State<ManList> {
+  List<Member> allmember = [];
+  void getData() async {
+    allmember = await CrewDB.getMember(Crewdb);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.only(top: 0, right: 10, bottom: 50),
       itemBuilder: (BuildContext context, int index) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: _item(globalList[index], index),
+        child: _item(allmember[index], index),
       ),
-      itemCount: globalList.length,
+      itemCount: allmember.length,
     );
   }
 
-  Widget _item(Namelist root, int index) {
+  Widget _item(Member root, int index) {
     return Column(
       children: [
         ClipRRect(
@@ -58,9 +63,10 @@ class ManListState extends State<ManList> {
                 motion: ScrollMotion(),
                 children: [
                   SlidableAction(
-                    onPressed: (context) {
-                      setState(() {
-                        globalList.remove(root);
+                    onPressed: (context) async {
+                      setState(() async {
+                        allmember.remove(root);
+                        await CrewDB.deleteMember(root.Id, Crewdb);
                       });
                     },
                     backgroundColor: Color(0xFFFE4A49),
@@ -76,17 +82,23 @@ class ManListState extends State<ManList> {
                   color: Color.fromARGB(255, 142, 160, 197),
                 ),
                 title: Text(
-                  root.title,
+                  root.Name,
                   style: const TextStyle(
                     color: Color.fromARGB(255, 82, 82, 82),
                     fontSize: 20.0,
                   ),
                 ),
-                subtitle: Text('工作場所'),
+                subtitle: Text(
+                  root.Wplace,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 82, 82, 82),
+                    fontSize: 20.0,
+                  ),
+                ),
                 onTap: () {
                   setState(() {
                     showDataAlert(1, root);
-                    print(root.title);
+                    print(root.Name);
                   });
                 },
               ),
@@ -100,7 +112,8 @@ class ManListState extends State<ManList> {
     );
   }
 
-  showDataAlert(int state, Namelist root) {
+  showDataAlert(int state, Member root) {
+    Member edit = root;
     showDialog(
         context: context,
         builder: (context) {
@@ -144,7 +157,7 @@ class ManListState extends State<ManList> {
                           }
                           return null;
                         },
-                        initialValue: root.title,
+                        initialValue: root.Name,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           // hintText: 'Enter Id here',
@@ -161,7 +174,7 @@ class ManListState extends State<ManList> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         readOnly: true,
-                        initialValue: '002',
+                        initialValue: root.Id,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           // hintText: 'Enter Id here',
@@ -177,7 +190,7 @@ class ManListState extends State<ManList> {
                     Container(
                       padding: const EdgeInsets.fromLTRB(8, 8, 8, 30),
                       child: TextFormField(
-                        initialValue: '工作場所',
+                        initialValue: root.Wplace,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           // hintText: 'Enter Id here',

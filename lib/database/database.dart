@@ -7,13 +7,13 @@ import 'dart:async';
 
 //成員
 class Member {
-  final String Id;
-  final String Name;
-  final String Passwd;
-  final String Position;
-  final String Wplace;
+  String Id;
+  String Name;
+  String Passwd;
+  String Position;
+  String Wplace;
 
-  const Member({
+  Member({
     required this.Id,
     required this.Name,
     required this.Passwd,

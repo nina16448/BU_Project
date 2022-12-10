@@ -9,6 +9,10 @@ import 'class/drawer.dart';
 import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Globals.dart';
+import 'database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
 // ignore: camel_case_types
 class Captain_Home extends StatefulWidget {
@@ -24,7 +28,12 @@ class _Captain_HomeState extends State<Captain_Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   // final GlobalKey<StepsState> _key = GlobalKey();
   final PageController controller = PageController(initialPage: 1000);
-  List<Namelist> searchList = getList();
+  List<Member> searchList = [];
+
+  void getData() async {
+
+    searchList = await CrewDB.getMember(Crewdb);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,13 +245,13 @@ class _Captain_HomeState extends State<Captain_Home> {
     );
   }
 
-  void filterSearchResults(String query) {
-    List<Namelist> dummySearchList = [];
-    dummySearchList.addAll(globalList);
+  void filterSearchResults(String query) async {
+    List<Member> dummySearchList = [];
+    dummySearchList.addAll(await CrewDB.getMember(Crewdb));
     if (query.isNotEmpty) {
-      List<Namelist> dummyListData = [];
+      List<Member> dummyListData = [];
       dummySearchList.forEach((item) {
-        if (item.title.contains(query.toUpperCase())) {
+        if (item.Name.contains(query.toUpperCase())) {
           dummyListData.add(item);
         }
       });
@@ -254,13 +263,13 @@ class _Captain_HomeState extends State<Captain_Home> {
       });
       return;
     } else {
-      setState(() {
+      setState(() async {
         searchList.clear();
         // searchList.addAll(getList());
-        searchList.addAll(globalList);
+        searchList.addAll(await CrewDB.getMember(Crewdb));
         // searchList = globalList;
         print('global size:');
-        print(globalList.length);
+        // print(globalList.length);
       });
     }
   }
